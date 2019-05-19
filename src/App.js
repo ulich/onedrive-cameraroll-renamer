@@ -24,7 +24,7 @@ export default function App() {
           )}
         </Menu>
       </Layout.Header>
-      <Layout.Content style={{ padding: 50 }}>
+      <Layout.Content style={{ padding: 50, maxWidth: 1200, width: '100%', alignSelf: 'center' }}>
         {authenticated
           ? <RenameProgress />
           : <Login onComplete={() => setAuthenticated(true)} />}
