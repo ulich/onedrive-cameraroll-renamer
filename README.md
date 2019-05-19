@@ -47,4 +47,5 @@ Now put the contents of `build/` to any static file server of your choice.
 * The files are not really named with 100% consistency. The most important thing for me right now was that all files start with `YYYYMMDD_`
 * The source folder and destination folder are currently hardcoded.
 * It only processes the first 200 files. If there are more files, you need to re-run again by reloading the page.
+* Currently, files are renamed/moved one by one sequencially. The microsoft graph API supports batching.
 * Errors are not really displayed in a way that makes it easy to understand the problem.
