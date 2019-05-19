@@ -6,25 +6,26 @@ import Spin from 'antd/lib/spin';
 import List from 'antd/lib/list';
 
 export default function RenameProgress() {
+  const [allFiles, setAllFiles] = useState([])
   const [currentFile, setCurrentFile] = useState(null)
+  const [processedFileCount, setProcessedFileCount] = useState(0)
   const [unprocessedFiles, setUnprocessedFiles] = useState([])
   const [done, setDone] = useState(false)
 
   useEffect(() => {
-    async function perform() {
+    async function processFiles() {
       const processedFolder = await getDriveItemInfo('/Bilder/Camera Roll/umbenannt')
       
       const response = await listFiles('/Bilder/Camera Roll')
-      const files = response.value
+      const files = response.value.filter(f => f.id !== processedFolder.id)
+      setAllFiles(files)
 
       for (let file of files) {
-        if (file.id === processedFolder.id) {
-          continue
-        }
-
         setCurrentFile(file)
         const processed = await handleFile(file, processedFolder)
-        if (!processed) {
+        if (processed) {
+          setProcessedFileCount(old => old + 1)
+        } else {
           setUnprocessedFiles(old => [...old, file])
         }
       }
@@ -32,13 +33,14 @@ export default function RenameProgress() {
       setDone(true)
     }
 
-    perform()
+    processFiles()
   }, [])
 
   if (done) {
+    const message = `${processedFileCount} out of ${allFiles.length} files processed successfully.`
     return (
       <div>
-        <Alert message="Done" type="success" showIcon />
+        <Alert message={message} type="success" showIcon />
         <UnprocessedFiles files={unprocessedFiles} />
       </div>
     )
