@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-import Button from 'antd/lib/button';
-import Layout from 'antd/lib/layout';
-import Menu from 'antd/lib/menu';
-import SubMenu from 'antd/lib/menu/SubMenu';
+import { Button, Layout, Menu } from 'antd';
 import { Async } from './utils/data-fetch';
 import RenameProgress from './RenameProgress';
 import { isAuthenticated, login, logout, getUserDetails } from './utils/onedrive-client';
@@ -16,11 +13,11 @@ export default function App() {
         <Logo />
         <Menu theme="dark" mode="horizontal" style={{ lineHeight: '64px' }}>
           {authenticated && (
-            <SubMenu title={<ProfileMenuItemTitle />}>
+            <Menu.SubMenu title={<ProfileMenuItemTitle />}>
               <Menu.Item onClick={() => { logout(); setAuthenticated(false) }}>
                 Logout
               </Menu.Item>
-            </SubMenu>
+            </Menu.SubMenu>
           )}
         </Menu>
       </Layout.Header>

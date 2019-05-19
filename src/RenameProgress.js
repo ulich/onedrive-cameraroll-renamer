@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { handleFile } from './RenameService';
 import { getDriveItemInfo, listFiles } from './utils/onedrive-client';
-import Alert from 'antd/lib/alert';
-import Spin from 'antd/lib/spin';
-import Progress from 'antd/lib/progress';
-import List from 'antd/lib/list';
+import { Alert, Spin, Progress, List } from 'antd';
 
 export default function RenameProgress() {
   const [allFiles, setAllFiles] = useState([])
