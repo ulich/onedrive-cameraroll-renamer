@@ -1,68 +1,29 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# onedrive-cameraroll-renamer
 
-## Available Scripts
+Renames all the files in your OneDrive Camera Roll folder
+into the format `YYYYMMDD_HHmmss`. 
 
-In the project directory, you can run:
+*DISCLAIMER*: This is a tool I built for myself. It is not super extensive or configurable, it just gets the thing done for me. See [TODOs](#todos) for open things to improve. Feel free to contribute by creating issues or PRs here.
 
-### `npm start`
+## Background
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Phones store fotos and videos with different filenames.
+Some store them like `YYYYMMDD_HHmmss.jpg`, some do `IMG_YYYYMMDD_HHmmss.jpg`
+and others put the unix timestamp into the name (`IMG_1558292380001_12345.jpg`).
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+The OneDrive app automatically uploads the fotos and videos to your OneDrive
+but keeps the filenames as-is. If the files in the folder do not have a consistent
+naming scheme, looking through the files is annoying because you cannot sort them
+chronologically.
 
-### `npm test`
+This website connects to your OneDrive account (as soon as you authorize it) and
+renames all files from `/Bilder/Camera Roll` and moves them to `/Bilder/Camera Roll/umbenannt`
+for not having too process them twice.
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## TODOs
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+* The list of filename patterns is not complete for sure. I just added the cases I encountered with my files
+* The files are not really named with 100% consistency. The most important thing for me right now was that all files start with `YYYYMMDD_`
+* The source folder and destination folder are currently hardcoded.
+* It only processes the first 200 files. If there are more files, you need to re-run again by reloading the page.
+* Errors are not really displayed in a way that makes it easy to understand the problem.
