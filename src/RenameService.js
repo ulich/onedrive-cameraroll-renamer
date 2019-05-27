@@ -1,18 +1,7 @@
 import dayjs from 'dayjs';
 import { moveFile } from './utils/onedrive-client';
 
-export async function handleFile(file, processedFolder) {
-  const { move, newName } = handleFilename(file.name)
-  if (move) {
-    console.log(`Moving "${file.name}"` + (newName ? ` and renaming to "${newName}"` : ''))
-    await moveFile(file, processedFolder, newName)
-    return true
-  }
-  
-  return false
-}
-
-export function handleFilename(filename) {
+export function determineAction(filename) {
   if (/^20\d{6}_\d{6}\.(jpg|jpeg|mp4)$/.test(filename)
    || /^20\d{6}_\d{6}_\d+\.(jpg|jpeg|mp4)$/.test(filename)
    || /^20\d{6}_000000_\d+_WA\.(jpg|jpeg|mp4)$/.test(filename)) {
@@ -66,4 +55,15 @@ export function handleFilename(filename) {
 
   console.log(`Dunno what to do with "${filename}"`)
   return { move: false }
+}
+
+export async function executeAction(file, action, processedFolder) {
+  const { move, newName } = action
+  if (move) {
+    console.log(`Moving "${file.name}"` + (newName ? ` and renaming to "${newName}"` : ''))
+    await moveFile(file, processedFolder, newName)
+    return true
+  }
+  
+  return false
 }

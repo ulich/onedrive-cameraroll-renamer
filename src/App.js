@@ -9,7 +9,7 @@ export default function App() {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Layout.Header style={{ display: 'flex' }}>
+      <Layout.Header style={{ display: 'flex', padding: '0 20px' }}>
         <Logo />
         <Menu theme="dark" mode="horizontal" style={{ lineHeight: '64px' }}>
           {authenticated && (
@@ -21,7 +21,7 @@ export default function App() {
           )}
         </Menu>
       </Layout.Header>
-      <Layout.Content style={{ padding: 50, maxWidth: 1200, width: '100%', alignSelf: 'center' }}>
+      <Layout.Content style={{ padding: '40px 20px', maxWidth: 1200, width: '100%', alignSelf: 'center' }}>
         {authenticated
           ? <RenameProgress />
           : <Login onComplete={() => setAuthenticated(true)} />}

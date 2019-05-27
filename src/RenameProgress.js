@@ -1,98 +1,58 @@
-import React, { useEffect, useState } from 'react';
-import { handleFile } from './RenameService';
-import { getDriveItemInfo, listFiles } from './utils/onedrive-client';
-import { Alert, Spin, Progress, List } from 'antd';
+import React from 'react';
+import useFileProcessor from './useFileProcessor';
+import { Alert, Spin, Progress, List, Icon } from 'antd';
 
 export default function RenameProgress() {
-  const [allFiles, setAllFiles] = useState([])
-  const [currentFile, setCurrentFile] = useState(null)
-  const [processedFileCount, setProcessedFileCount] = useState(0)
-  const [unprocessedFiles, setUnprocessedFiles] = useState([])
-  const [done, setDone] = useState(false)
+  const { allFilesCount, processedFiles, done } = useFileProcessor()
 
-  useEffect(() => {
-    async function processFiles() {
-      const processedFolder = await getDriveItemInfo('/Bilder/Camera Roll/umbenannt')
-      
-      const response = await listFiles('/Bilder/Camera Roll')
-      const files = response.value.filter(f => f.id !== processedFolder.id)
-      setAllFiles(files)
+  const successfulCount = processedFiles.filter(item => item.successful).length
+  const successPercent = (done && allFilesCount === 0) ? 100 : Math.round(successfulCount / allFilesCount * 100)
+  const progressPercent = done ? 100 : Math.round(processedFiles.length / allFilesCount * 100)
 
-      for (let file of files) {
-        setCurrentFile(file)
-        const processed = await handleFile(file, processedFolder)
-        if (processed) {
-          setProcessedFileCount(old => old + 1)
-        } else {
-          setUnprocessedFiles(old => [...old, file])
-        }
-      }
-
-      setDone(true)
-    }
-
-    processFiles()
-  }, [])
-
-  const progressPercent = Math.round((processedFileCount + unprocessedFiles.length) / allFiles.length * 100)
-  const successPercent = allFiles.length === 0 ? 100 : Math.round(processedFileCount / allFiles.length * 100)
-
-  if (done) {
-    const message = `${processedFileCount} out of ${allFiles.length} files processed successfully.`
-    return (
-      <Status
-        progressPercent={100}
-        successPercent={successPercent}
-        unprocessedFiles={unprocessedFiles}
-      >
-        <Alert message={message} type="success" showIcon />
-      </Status>
-    )
-  }
-
-  if (!currentFile) {
-    return <div style={{ textAlign: 'center' }}><Spin /></div>
-  }
-  
-  return (
-    <Status
-      progressPercent={progressPercent}
-      successPercent={successPercent}
-      unprocessedFiles={unprocessedFiles}
-    >
-      <div>Processing {currentFile.name}</div>
-    </Status>
-  )
-}
-
-
-function Status({ progressPercent, successPercent, unprocessedFiles, children }) {
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr', gridRowGap: 50, justifyItems: 'center' }}>
       <Progress type="circle" percent={progressPercent} successPercent={successPercent} />
-      {children}
-      <UnprocessedFiles files={unprocessedFiles} />
+
+      { done &&
+        <Alert
+          message={`${successfulCount} out of ${allFilesCount} files processed successfully.`}
+          type="success"
+          showIcon />
+      }
+
+      {processedFiles.length > 0 &&
+        <List
+          size="small"
+          bordered
+          dataSource={processedFiles}
+          renderItem={item => <ListItem item={item} />}
+          style={{ width: '100%', maxWidth: 600 }}
+        />
+      }
     </div>
   )
 }
 
-function UnprocessedFiles({ files }) {
-  if (files.length === 0) {
-    return null
+function ListItem({ item }) {
+  return (
+    <List.Item style={{ display: 'flex', alignItems: 'flex-start' }}>
+      <div style={{ marginRight: 10 }}>
+        <ItemIcon item={item} />
+      </div>
+      <div style={{ flex: '1' }}>
+        {item.file.name} {item.action.newName && ` -> ${item.action.newName}`}
+      </div>
+    </List.Item>
+  )
+}
+
+function ItemIcon({ item }) {
+  if (!item.processed) {
+    return <Spin size="small" />
+  }
+  if (item.successful) {
+    return <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" />
   }
 
-  return (
-    <div>
-      <h2>Unprocessed files</h2>
-      <List
-        size="small"
-        bordered
-        dataSource={files}
-        renderItem={item => (
-          <List.Item>
-            {item.name}
-          </List.Item>
-        )} />
-      </div>
-  )
+  return <Icon type="close-circle" theme="twoTone" twoToneColor="#eb2f96" />
 }
