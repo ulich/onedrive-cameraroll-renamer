@@ -36,12 +36,12 @@ export default function useFileProcessor() {
     switch (action.type) {
       case 'add-file-to-process':
         return [
-          ...processedFiles,
           {
             file: action.file,
             action: action.fileAction,
             processed: false,
-          }
+          },
+          ...processedFiles,
         ]
       case 'update-file-processed-status':
         return processedFiles.map(item => {

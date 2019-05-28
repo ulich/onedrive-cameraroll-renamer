@@ -26,6 +26,7 @@ export default function RenameProgress() {
           bordered
           dataSource={processedFiles}
           renderItem={item => <ListItem item={item} />}
+          rowKey={item => item.file.id}
           style={{ width: '100%', maxWidth: 600 }}
         />
       }
