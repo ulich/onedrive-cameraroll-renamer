@@ -4,6 +4,7 @@ import { moveFile } from './utils/onedrive-client';
 export function determineAction(filename) {
   if (/^20\d{6}_\d{6}\.(jpg|jpeg|mp4)$/.test(filename)
    || /^20\d{6}_\d{6}_\d+\.(jpg|jpeg|mp4)$/.test(filename)
+   || /^20\d{6}_\d{6}\(\d+\)\.(jpg|jpeg|mp4)$/.test(filename)
    || /^20\d{6}_000000_\d+_WA\.(jpg|jpeg|mp4)$/.test(filename)) {
     return { move: true }
   }
@@ -11,11 +12,6 @@ export function determineAction(filename) {
   if (/^20\d{6}_\d{6}\.(JPG|JPEG|MP4)$/.test(filename)
    || /^20\d{6}_\d{6}_\d+\.(JPG|JPEG|MP4)$/.test(filename)) {
     const newName = filename.toLowerCase()
-    return { move: true, newName }
-  }
-
-  if (/^20\d{6}_\d{6}\(\d\)\.(jpg|jpeg|mp4)$/.test(filename)) {
-    const newName = filename.replace(/\(\d\)/, '_1')
     return { move: true, newName }
   }
 
