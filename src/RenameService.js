@@ -15,13 +15,16 @@ export function determineAction(filename) {
     return { move: true, newName }
   }
 
-  if (/^IMG_20\d{6}_\d{6}\.(jpg|jpeg)/.test(filename)) {
+  if (/^IMG_20\d{6}_\d{6}\.(jpg|jpeg)/.test(filename)
+   || /^IMG_20\d{6}_\d{6}_\d+\.(jpg|jpeg)/.test(filename)) {
     const newName = filename.replace('IMG_', '')
     return { move: true, newName }
   }
 
-  if (/^IMG_\d{13}_\d{5}\.(jpg|jpeg)$/.test(filename)) {
-    const timestamp = Number(filename.replace('IMG_', '').substr(0, 13))
+  if (/^IMG_\d{13}_\d+\.(jpg|jpeg)$/.test(filename)
+   || /^IMAGE_\d{13}_\d+\.(jpg|jpeg)$/.test(filename)) {
+    const nameWithoutPrefix = filename.replace('IMG_', '').replace('IMAGE_', '')
+    const timestamp = Number(nameWithoutPrefix.substr(0, 13))
     const newName = dayjs(timestamp).format('YYYYMMDD_HHmmss') + '.jpg'
     return { move: true, newName }
   }
