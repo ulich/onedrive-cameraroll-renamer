@@ -23,9 +23,10 @@ export function determineAction(filename) {
 
   if (/^IMG_\d{13}_\d+\.(jpg|jpeg)$/.test(filename)
    || /^IMAGE_\d{13}_\d+\.(jpg|jpeg)$/.test(filename)) {
-    const nameWithoutPrefix = filename.replace('IMG_', '').replace('IMAGE_', '')
-    const timestamp = Number(nameWithoutPrefix.substr(0, 13))
-    const newName = dayjs(timestamp).format('YYYYMMDD_HHmmss') + '.jpg'
+    const parts = filename.split('_')
+    const timestamp = Number(parts[1])
+    const suffix = parts[2]
+    const newName = dayjs(timestamp).format('YYYYMMDD_HHmmss') + '_' + suffix
     return { move: true, newName }
   }
 
