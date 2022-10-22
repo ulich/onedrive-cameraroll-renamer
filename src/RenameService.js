@@ -61,7 +61,14 @@ export async function executeAction(file, action, processedFolder) {
   const { move, newName } = action
   if (move) {
     console.log(`Moving "${file.name}"` + (newName ? ` and renaming to "${newName}"` : ''))
-    await moveFile(file, processedFolder, newName)
+    
+    try {
+      await moveFile(file, processedFolder, newName)
+    } catch (e) {
+      console.error(e)
+      return false
+    }
+    
     return true
   }
   
